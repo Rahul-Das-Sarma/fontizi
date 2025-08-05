@@ -7,23 +7,42 @@ interface ImageCropperProps {
   onClose: () => void;
 }
 
+interface CropArea {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+interface CroppedAreaPixels {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+
+interface CropPosition {
+  x: number;
+  y: number;
+}
+
 export const ImageCropper = ({ onClose }: ImageCropperProps) => {
   const { currentCropImage, updateScreenshotCrop, setCurrentCropImage } =
     useAppStore();
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [rotation, setRotation] = useState(0);
-  const [isCropping, setIsCropping] = useState(false);
+  const [crop, setCrop] = useState<CropPosition>({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState<number>(1);
+  const [rotation, setRotation] = useState<number>(0);
+  const [isCropping, setIsCropping] = useState<boolean>(false);
 
   const onCropComplete = useCallback(
-    (croppedArea: any, croppedAreaPixels: any) => {
+    (croppedArea: CropArea, croppedAreaPixels: CroppedAreaPixels) => {
       // Store the crop data for later use
       setCropData(croppedAreaPixels);
     },
     []
   );
 
-  const [cropData, setCropData] = useState<any>(null);
+  const [cropData, setCropData] = useState<CroppedAreaPixels | null>(null);
 
   const createCroppedImage = async () => {
     if (!currentCropImage || !cropData) return;
@@ -41,8 +60,8 @@ export const ImageCropper = ({ onClose }: ImageCropperProps) => {
       const image = new Image();
       image.src = currentCropImage.preview;
 
-      await new Promise((resolve) => {
-        image.onload = resolve;
+      await new Promise<void>((resolve) => {
+        image.onload = () => resolve();
       });
 
       // Set canvas dimensions to the cropped area
@@ -192,10 +211,12 @@ export const ImageCropper = ({ onClose }: ImageCropperProps) => {
                   className="w-32 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                 />
               </div>
-              
+
               <div className="flex items-center space-x-2 text-sm text-gray-500">
                 <Sparkles className="w-4 h-4" />
-                <span>Drag to move • Resize corners • Use grid for alignment</span>
+                <span>
+                  Drag to move • Resize corners • Use grid for alignment
+                </span>
               </div>
             </div>
 

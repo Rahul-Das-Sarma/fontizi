@@ -8,7 +8,7 @@ import { Type, Sparkles, Zap, Upload, Crop } from "lucide-react";
 
 export const LandingPage = () => {
   const { screenshots, currentCropImage } = useAppStore();
-  const [showCropper, setShowCropper] = useState(false);
+  const [showCropper, setShowCropper] = useState<boolean>(false);
 
   const handleCloseCropper = () => {
     setShowCropper(false);
@@ -38,7 +38,8 @@ export const LandingPage = () => {
             <div className="flex items-center space-x-4">
               <div className="text-right">
                 <p className="text-sm font-medium text-gray-900">
-                  {screenshots.length} {screenshots.length === 1 ? "Sample" : "Samples"}
+                  {screenshots.length}{" "}
+                  {screenshots.length === 1 ? "Sample" : "Samples"}
                 </p>
                 <p className="text-xs text-gray-500">Ready for analysis</p>
               </div>
@@ -57,17 +58,19 @@ export const LandingPage = () => {
               AI-Powered Font Recognition
             </span>
           </div>
-          
+
           <h2 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
             Identify Fonts with
             <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              {" "}Precision
+              {" "}
+              Precision
             </span>
           </h2>
-          
+
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed">
-            Upload screenshots, crop text regions, and let our AI identify fonts with 
-            remarkable accuracy. Perfect for designers, developers, and typography enthusiasts.
+            Upload screenshots, crop text regions, and let our AI identify fonts
+            with remarkable accuracy. Perfect for designers, developers, and
+            typography enthusiasts.
           </p>
 
           {/* Feature Cards */}
@@ -76,7 +79,9 @@ export const LandingPage = () => {
               <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mb-4">
                 <Upload className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Smart Upload</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Smart Upload
+              </h3>
               <p className="text-gray-600 text-sm">
                 Drag & drop or click to upload screenshots with instant preview
               </p>
@@ -86,7 +91,9 @@ export const LandingPage = () => {
               <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center mb-4">
                 <Crop className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Precise Cropping</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Precise Cropping
+              </h3>
               <p className="text-gray-600 text-sm">
                 Select exact text regions with our advanced cropping tools
               </p>
@@ -96,7 +103,9 @@ export const LandingPage = () => {
               <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mb-4">
                 <Zap className="w-6 h-6 text-white" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">AI Analysis</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                AI Analysis
+              </h3>
               <p className="text-gray-600 text-sm">
                 Get instant font identification with confidence scores
               </p>
@@ -148,7 +157,8 @@ export const LandingPage = () => {
               <span className="text-gray-500 font-medium">Fontizi</span>
             </div>
             <p className="text-gray-500 text-sm">
-              Advanced font recognition powered by AI • Built with React & TypeScript
+              Advanced font recognition powered by AI • Built with React &
+              TypeScript
             </p>
           </div>
         </div>

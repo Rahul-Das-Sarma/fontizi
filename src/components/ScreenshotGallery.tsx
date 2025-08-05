@@ -1,10 +1,24 @@
 import { Trash2, Eye, Crop, Type, Sparkles } from 'lucide-react'
 import { useAppStore } from '../store/useAppStore'
 
+interface Screenshot {
+  id: string;
+  file: File;
+  preview: string;
+  uploadedAt: Date;
+  croppedImage?: string;
+  cropData?: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
+}
+
 export const ScreenshotGallery = () => {
   const { screenshots, removeScreenshot, setCurrentCropImage } = useAppStore()
 
-  const handleCrop = (screenshot: any) => {
+  const handleCrop = (screenshot: Screenshot) => {
     setCurrentCropImage(screenshot)
   }
 
