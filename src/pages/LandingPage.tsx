@@ -1,4 +1,5 @@
 import { UploadButton } from "../components/UploadButton";
+import { ImagePreview } from "../components/ImagePreview";
 import { ScreenshotGallery } from "../components/ScreenshotGallery";
 import { ErrorNotification } from "../components/ErrorNotification";
 import { ImageCropper } from "../components/ImageCropper";
@@ -123,24 +124,24 @@ export const LandingPage = () => {
               Upload a screenshot containing text you want to identify
             </p>
           </div>
-          <UploadButton />
+          {screenshots.length === 0 ? <UploadButton /> : <ImagePreview />}
         </div>
 
         {/* Gallery Section */}
-        {screenshots.length > 0 && (
+        {screenshots.length > 1 && (
           <div>
             <div className="flex items-center justify-between mb-8">
               <div>
                 <h3 className="text-2xl font-semibold text-gray-900">
-                  Your Font Samples
+                  Upload History
                 </h3>
                 <p className="text-gray-600 mt-1">
-                  Manage and analyze your uploaded text samples
+                  Previously uploaded images for font analysis
                 </p>
               </div>
               <div className="flex items-center space-x-2 text-sm text-gray-500">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span>Ready for analysis</span>
+                <span>{screenshots.length - 1} previous uploads</span>
               </div>
             </div>
             <ScreenshotGallery />

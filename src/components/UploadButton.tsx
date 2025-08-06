@@ -52,6 +52,7 @@ export const UploadButton = () => {
     <div className="w-full max-w-2xl mx-auto">
       <input
         ref={fileInputRef}
+        id="file-input"
         type="file"
         accept="image/*"
         onChange={(e) => handleFileSelect(e.target.files)}
