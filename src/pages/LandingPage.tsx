@@ -3,6 +3,7 @@ import { ImagePreview } from "../components/ImagePreview";
 import { ScreenshotGallery } from "../components/ScreenshotGallery";
 import { ErrorNotification } from "../components/ErrorNotification";
 import { ImageCropper } from "../components/ImageCropper";
+import { BackendStatus } from "../components/BackendStatus";
 import { useAppStore } from "../store/useAppStore";
 import { useState } from "react";
 import { Type, Sparkles, Zap, Upload, Crop } from "lucide-react";
@@ -37,6 +38,7 @@ export const LandingPage = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <BackendStatus />
               <div className="text-right">
                 <p className="text-sm font-medium text-gray-900">
                   {screenshots.length}{" "}
