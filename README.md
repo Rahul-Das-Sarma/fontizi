@@ -17,7 +17,7 @@ AI-powered font recognition application that identifies fonts from images using 
 
 ### Prerequisites
 
-- **Node.js** 18+ with npm
+- **Node.js** 18+ with pnpm (recommended) or npm
 - **Hugging Face Account** (free tier available)
 
 ### Installation & Setup
@@ -29,8 +29,8 @@ AI-powered font recognition application that identifies fonts from images using 
    git clone https://github.com/your-username/fontizi.git
    cd fontizi
 
-   # Install frontend dependencies
-   npm install
+      # Install frontend dependencies
+   pnpm install
 
    # Install backend dependencies
    cd backend
@@ -67,7 +67,7 @@ AI-powered font recognition application that identifies fonts from images using 
    npm run dev
 
    # Terminal 2: Frontend server
-   npm run dev
+   pnpm run dev
    ```
 
 4. **Access the application**
@@ -194,10 +194,10 @@ curl -X POST "http://localhost:3001/api/identify-font" \
 **Frontend (root directory):**
 
 ```bash
-npm run dev      # Start Vite development server
-npm run build    # Build for production
-npm run preview  # Preview production build
-npm run lint     # Run ESLint
+pnpm run dev      # Start Vite development server
+pnpm run build    # Build for production
+pnpm run preview  # Preview production build
+pnpm run lint     # Run ESLint
 ```
 
 **Backend (backend/ directory):**
@@ -289,7 +289,7 @@ cd backend && npm install
 
 ```bash
 # Build frontend
-npm run build
+pnpm run build
 
 # Start backend in production
 cd backend
