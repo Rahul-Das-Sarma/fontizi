@@ -1,6 +1,7 @@
-import { X, Upload, Crop, Eye } from "lucide-react";
+import { X, Upload, Crop, Eye, Sparkles, Loader2 } from "lucide-react";
 import { useAppStore } from "../store/useAppStore";
 import { useRef } from "react";
+import { FontResult } from "./FontResult";
 
 export const ImagePreview = () => {
   const {
@@ -10,6 +11,8 @@ export const ImagePreview = () => {
     addScreenshot,
     setError,
     clearError,
+    identifyFont,
+    backendConnected,
   } = useAppStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -55,6 +58,10 @@ export const ImagePreview = () => {
 
   const handleUploadAnother = () => {
     fileInputRef.current?.click();
+  };
+
+  const handleIdentifyFont = () => {
+    identifyFont(latestScreenshot.id);
   };
 
   return (
@@ -124,6 +131,22 @@ export const ImagePreview = () => {
               <span>Crop Text</span>
             </button>
             <button
+              onClick={handleIdentifyFont}
+              disabled={!backendConnected || latestScreenshot.isIdentifying}
+              className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {latestScreenshot.isIdentifying ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Sparkles className="w-4 h-4" />
+              )}
+              <span>
+                {latestScreenshot.isIdentifying
+                  ? "Identifying..."
+                  : "Identify Font"}
+              </span>
+            </button>
+            <button
               onClick={handleRemove}
               className="flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
             >
@@ -132,6 +155,16 @@ export const ImagePreview = () => {
             </button>
           </div>
         </div>
+
+        {/* Font Result */}
+        {latestScreenshot.fontResult && (
+          <div className="mt-6 pt-6 border-t border-gray-200">
+            <FontResult
+              result={latestScreenshot.fontResult}
+              onRetry={handleIdentifyFont}
+            />
+          </div>
+        )}
 
         {/* Upload More Button */}
         <div className="mt-6 pt-6 border-t border-gray-200">
