@@ -16,6 +16,7 @@ interface Screenshot {
   };
   fontResult?: FontIdentificationResult;
   isIdentifying?: boolean;
+  confidenceThreshold?: number;
 }
 
 interface AppState {
@@ -24,6 +25,7 @@ interface AppState {
   error: string | null;
   currentCropImage: Screenshot | null;
   backendConnected: boolean;
+  defaultConfidenceThreshold: number;
 
   // Actions
   addScreenshot: (file: File) => void;
@@ -37,8 +39,9 @@ interface AppState {
     croppedImage: string,
     cropData: { x: number; y: number; width: number; height: number }
   ) => void;
-  identifyFont: (id: string) => Promise<void>;
+  identifyFont: (id: string, confidenceThreshold?: number) => Promise<void>;
   setBackendConnected: (connected: boolean) => void;
+  setDefaultConfidenceThreshold: (threshold: number) => void;
 }
 
 export const useAppStore = create<AppState>((set, get) => ({
@@ -47,6 +50,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   error: null,
   currentCropImage: null,
   backendConnected: false,
+  defaultConfidenceThreshold: 0.3,
 
   addScreenshot: (file: File) => {
     const id = crypto.randomUUID();
@@ -106,7 +110,7 @@ export const useAppStore = create<AppState>((set, get) => ({
     }));
   },
 
-  identifyFont: async (id: string) => {
+  identifyFont: async (id: string, confidenceThreshold?: number) => {
     const state = get();
     const screenshot = state.screenshots.find((s) => s.id === id);
 
@@ -115,34 +119,64 @@ export const useAppStore = create<AppState>((set, get) => ({
       return;
     }
 
+    // Use provided confidence threshold or default
+    const threshold = confidenceThreshold ?? state.defaultConfidenceThreshold;
+
     // Mark as identifying
     set((state) => ({
       screenshots: state.screenshots.map((s) =>
-        s.id === id ? { ...s, isIdentifying: true } : s
+        s.id === id
+          ? { ...s, isIdentifying: true, confidenceThreshold: threshold }
+          : s
       ),
     }));
 
     try {
-      const result = await identifyFontService(screenshot.file);
+      // Set global loading state
+      set({ isLoading: true, error: null });
+
+      const result = await identifyFontService(screenshot.file, threshold);
 
       // Update with font result
       set((state) => ({
         screenshots: state.screenshots.map((s) =>
           s.id === id ? { ...s, fontResult: result, isIdentifying: false } : s
         ),
+        isLoading: false,
       }));
     } catch (error) {
+      let errorMessage = "Font identification failed";
+
+      if (error instanceof Error) {
+        if (error.message.includes("timeout")) {
+          errorMessage =
+            "Request timed out. The AI model is taking longer than expected. Please try again.";
+        } else if (error.message.includes("Network Error")) {
+          errorMessage =
+            "Network error. Please check your connection and try again.";
+        } else if (error.message.includes("confidence")) {
+          errorMessage =
+            "Invalid confidence threshold. Please use a value between 0.0 and 1.0.";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+
       set((state) => ({
         screenshots: state.screenshots.map((s) =>
           s.id === id ? { ...s, isIdentifying: false } : s
         ),
-        error:
-          error instanceof Error ? error.message : "Font identification failed",
+        isLoading: false,
+        error: errorMessage,
       }));
     }
   },
 
   setBackendConnected: (connected: boolean) => {
     set({ backendConnected: connected });
+  },
+
+  setDefaultConfidenceThreshold: (threshold: number) => {
+    set({ defaultConfidenceThreshold: threshold });
   },
 }));

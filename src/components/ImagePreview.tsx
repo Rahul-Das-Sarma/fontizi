@@ -1,7 +1,8 @@
-import { X, Upload, Crop, Eye, Sparkles, Loader2 } from "lucide-react";
+import { X, Upload, Crop, Eye, Sparkles, Loader2, Target } from "lucide-react";
 import { useAppStore } from "../store/useAppStore";
 import { useRef } from "react";
-import { FontResult } from "./FontResult";
+import { FontResultList } from "./FontResultList";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 export const ImagePreview = () => {
   const {
@@ -13,6 +14,9 @@ export const ImagePreview = () => {
     clearError,
     identifyFont,
     backendConnected,
+    isLoading,
+    setLoading,
+    defaultConfidenceThreshold,
   } = useAppStore();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -61,7 +65,12 @@ export const ImagePreview = () => {
   };
 
   const handleIdentifyFont = () => {
-    identifyFont(latestScreenshot.id);
+    identifyFont(latestScreenshot.id, latestScreenshot.confidenceThreshold);
+  };
+
+  const handleCancelIdentification = () => {
+    setLoading(false);
+    setError("Font identification was cancelled");
   };
 
   return (
@@ -73,6 +82,18 @@ export const ImagePreview = () => {
         onChange={(e) => handleFileSelect(e.target.files)}
         className="hidden"
       />
+
+      {/* Loading Overlay */}
+      {isLoading && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+          <LoadingSpinner
+            message="Analyzing font with Enhanced AI..."
+            showProgress={true}
+            progress={50}
+            onCancel={handleCancelIdentification}
+          />
+        </div>
+      )}
 
       <div className="relative border-2 border-dashed border-gray-300 rounded-3xl p-8 text-center bg-white/80 backdrop-blur-sm shadow-lg">
         {/* Preview Image */}
@@ -121,6 +142,15 @@ export const ImagePreview = () => {
             {latestScreenshot.uploadedAt.toLocaleTimeString()}
           </p>
 
+          {/* Confidence Threshold Info */}
+          <div className="flex items-center justify-center space-x-2 mb-4 text-sm text-gray-600">
+            <Target className="w-4 h-4" />
+            <span>
+              Confidence Threshold:{" "}
+              {(defaultConfidenceThreshold * 100).toFixed(0)}%
+            </span>
+          </div>
+
           {/* Action Buttons */}
           <div className="flex items-center justify-center space-x-4">
             <button
@@ -142,7 +172,7 @@ export const ImagePreview = () => {
               )}
               <span>
                 {latestScreenshot.isIdentifying
-                  ? "Identifying..."
+                  ? "Analyzing with Enhanced AI..."
                   : "Identify Font"}
               </span>
             </button>
@@ -156,12 +186,15 @@ export const ImagePreview = () => {
           </div>
         </div>
 
-        {/* Font Result */}
+        {/* Font Result List */}
         {latestScreenshot.fontResult && (
           <div className="mt-6 pt-6 border-t border-gray-200">
-            <FontResult
+            <FontResultList
               result={latestScreenshot.fontResult}
               onRetry={handleIdentifyFont}
+              imageUrl={
+                latestScreenshot.croppedImage || latestScreenshot.preview
+              }
             />
           </div>
         )}
