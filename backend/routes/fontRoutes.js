@@ -23,5 +23,12 @@ export function createFontRoutes(fontController) {
     fontController.handleFontIdentification.bind(fontController)
   );
 
+  // Font identification with base64 endpoint
+  router.post(
+    "/identify-font-base64",
+    fontIdentificationLimiter,
+    fontController.handleFontIdentificationBase64.bind(fontController)
+  );
+
   return router;
 }

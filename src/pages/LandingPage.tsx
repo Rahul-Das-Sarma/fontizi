@@ -4,13 +4,14 @@ import { ScreenshotGallery } from "../components/ScreenshotGallery";
 import { ErrorNotification } from "../components/ErrorNotification";
 import { ImageCropper } from "../components/ImageCropper";
 import { BackendStatus } from "../components/BackendStatus";
+import { ServiceSelector } from "../components/ServiceSelector";
 import { useAppStore } from "../store/useAppStore";
 import { useState } from "react";
 import { Type, Sparkles, Zap, Upload, Crop } from "lucide-react";
 
 export const LandingPage = () => {
   const { screenshots, currentCropImage } = useAppStore();
-  const [showCropper, setShowCropper] = useState<boolean>(false);
+  const [_showCropper, setShowCropper] = useState<boolean>(false);
 
   const handleCloseCropper = () => {
     setShowCropper(false);
@@ -33,7 +34,7 @@ export const LandingPage = () => {
                   Fontizi
                 </h1>
                 <span className="text-sm text-gray-500 font-medium">
-                  AI Font Recognition
+                  Enhanced AI Font Recognition
                 </span>
               </div>
             </div>
@@ -58,7 +59,7 @@ export const LandingPage = () => {
           <div className="inline-flex items-center space-x-2 bg-blue-50 border border-blue-200 rounded-full px-4 py-2 mb-6">
             <Sparkles className="w-4 h-4 text-blue-600" />
             <span className="text-sm font-medium text-blue-700">
-              AI-Powered Font Recognition
+              Enhanced AI-Powered Font Recognition
             </span>
           </div>
 
@@ -71,9 +72,9 @@ export const LandingPage = () => {
           </h2>
 
           <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed">
-            Upload screenshots, crop text regions, and let our AI identify fonts
-            with remarkable accuracy. Perfect for designers, developers, and
-            typography enthusiasts.
+            Upload screenshots, crop text regions, and let our enhanced AI
+            identify fonts with remarkable accuracy. Features text region
+            detection, confidence filtering, and ensemble predictions.
           </p>
 
           {/* Feature Cards */}
@@ -107,13 +108,19 @@ export const LandingPage = () => {
                 <Zap className="w-6 h-6 text-white" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                AI Analysis
+                Enhanced AI Analysis
               </h3>
               <p className="text-gray-600 text-sm">
-                Get instant font identification with confidence scores
+                Get instant font identification with confidence scores and
+                quality assessment
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Service Configuration */}
+        <div className="mb-12">
+          <ServiceSelector />
         </div>
 
         {/* Upload Section */}
@@ -129,23 +136,9 @@ export const LandingPage = () => {
           {screenshots.length === 0 ? <UploadButton /> : <ImagePreview />}
         </div>
 
-        {/* Gallery Section */}
+        {/* Gallery and Results Section */}
         {screenshots.length > 1 && (
           <div>
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h3 className="text-2xl font-semibold text-gray-900">
-                  Upload History
-                </h3>
-                <p className="text-gray-600 mt-1">
-                  Previously uploaded images for font analysis
-                </p>
-              </div>
-              <div className="flex items-center space-x-2 text-sm text-gray-500">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span>{screenshots.length - 1} previous uploads</span>
-              </div>
-            </div>
             <ScreenshotGallery />
           </div>
         )}
@@ -160,7 +153,7 @@ export const LandingPage = () => {
               <span className="text-gray-500 font-medium">Fontizi</span>
             </div>
             <p className="text-gray-500 text-sm">
-              Advanced font recognition powered by AI • Built with React &
+              Enhanced font recognition powered by AI • Built with React &
               TypeScript
             </p>
           </div>
